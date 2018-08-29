@@ -1,5 +1,7 @@
 ﻿using Microsoft.Owin.Hosting;
 using System;
+using System.Net.Http;
+using System.Threading;
 
 namespace SimpleWebApp
 {
@@ -11,8 +13,17 @@ namespace SimpleWebApp
 			using (WebApp.Start<OwinSelfHost>(BASE_ADDRESS))
 			{
 				Console.WriteLine($"Simple service listening at {BASE_ADDRESS}...");
+				Console.WriteLine();
 
-				Console.ReadKey();
+				while (true)
+				{
+					// Create HttpCient and make a request to api/values 
+					HttpClient client = new HttpClient();
+					var response = client.GetAsync(BASE_ADDRESS + "api/simple").Result;
+					Console.WriteLine(response.Content.ReadAsStringAsync().Result);
+
+					Thread.Sleep(200);
+				}
 			}
 		}
 	}
